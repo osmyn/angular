@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,15 +23,18 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public ActionResult<IEnumerable<AppUser>> GetUsers()
         {
-            return View();
+            var users = _context.Users.ToList();
+            return Ok(users);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet("{id}")]
+        public ActionResult<AppUser> GetUser(int id)
         {
-            return View("Error!");
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            return Ok(user);
         }
     }
 }
