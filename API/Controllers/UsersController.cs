@@ -11,35 +11,33 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : Controller
+  public class UsersController : BaseApiController
+  {
+    private readonly DataContext _context;
+    private readonly ILogger<UsersController> _logger;
+
+    public UsersController(DataContext context, ILogger<UsersController> logger)
     {
-        private readonly DataContext _context;
-        private readonly ILogger<UsersController> _logger;
-
-        public UsersController(DataContext context, ILogger<UsersController> logger)
-        {
-            _context = context;
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> GetUser(int id)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
-        }
+      _context = context;
+      _logger = logger;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
+    {
+      var users = await _context.Users.ToListAsync();
+      return Ok(users);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AppUser>> GetUser(int id)
+    {
+      var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+      if (user == null)
+      {
+        return NotFound();
+      }
+      return Ok(user);
+    }
+  }
 }
